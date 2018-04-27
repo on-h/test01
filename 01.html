@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="ko" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="ko" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="ko">
+<!--<![endif]-->
+
+<!-- START HEAD -->
+<head><meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=1280"/>
+<meta property="og:type" content="website" />
+<meta name="format-detection" content="telephone=no"/>
+<!-- START GLOBAL LEVEL PLUGIN STYLES -->
+<script type="text/javascript">
+	//webfont loading
+	WebFontConfig = {
+	  custom: {
+		  urls: ['http://svr.bluecapsystem.com:8098/assets/css/fonts.css']
+	  },
+	  active: function() {
+		sessionStorage.fonts = true;
+	  }
+	};
+	/*
+	(function() {
+	  var wf = document.createElement('script');
+	  wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+		'://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js';
+	  wf.type = 'text/javascript';
+	  wf.async = 'true';
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(wf, s);
+	})();
+	*/
+	
+	// 유효성 정규식
+	var blank_pattern = /^\s+|\s+$/g;	// 공백 체크값 : 문서 제목등...
+	var re_code = /^[0-9]{1,3}$/;		// 코드 0~999
+	var re_id = /^[a-z0-9_-]{3,16}$/; 	// 아이디  3~16자리 영문 숫자
+	// IP Address (IPv4), (IPv6)
+	var re_ip = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/; 
+	//var re_pw = /^[a-z0-9_-]{6,18}$/; // 비밀번ㄴ\호 검사식 [\uAC00-\uD7A3ㄱ-ㅎㅏ-ㅣa-zA-Z]
+	var re_desc = /^[가-힣]{2,100}|[\uAC00-\uD7A3ㄱ-ㅎㅏ-ㅣa-zA-Z]{2,100}$/; // [a-zA-Z]{2,100}\s[a-zA-Z]{2,100}$/;
+	//var re_name = /^[가-힣]{2,5}$/;
+	//var re_name = /^[가-힣]{2,5}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,30}$/;
+	var re_name = /^[가-힣]{2,5}|[a-zA-Z]{2,30}$/;
+	var re_url = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/; // URL 검사식
+	var re_tel = /^[0-9]{8,11}$/; // 전화번호 검사식
+	var re_tel_pattern = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/; 
+	var re_mail = /^([\w\.-]+)@([a-z\d\.-]+)\.([a-z\.]{2,6})$/; // 이메일 검사식
+</script>	
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/datetimepicker/bootstrap-datetimepicker.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/selectordie/selectordie.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/jquery-datatables/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/jstree/style.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/handsontable/handsontable.full.min.css">
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/trumbowyg/ui/trumbowyg.css"/>
+
+<!-- 2017.11.06 jquery-ui css 적용  -->
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/jquery-ui/jquery-ui.min.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/jquery-ui/jquery-ui.structure.min.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/lib/jquery-ui/jquery-ui.theme.min.css"/>
+<!-- // 2017.11.06 jquery-ui css 적용  -->
+<!-- END GLOBAL LEVEL PLUGIN STYLES -->  
+<!-- START GLOBAL LEVEL PLUGINS -->
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/modernizr/modernizr.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/moment/moment-with-locales.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/jquery/jquery-1.12.1.min.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/jquery-datatables/datatables.min.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/selectordie/selectordie.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/nano-scroller/nanoscroller.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/datetimepicker/bootstrap-datetimepicker.js"></script> 
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/shapeshift/jquery.shapeshift.min.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/jstree/jstree.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/slick/slick.min.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/chart/google-chart.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/handsontable/handsontable.full.min.js"></script>
+  <script type="text/javascript" src="http://svr.bluecapsystem.com:8098/assets/lib/trumbowyg/trumbowyg.min.js"></script>
+<!-- END GLOBAL LEVEL PLUGINS -->
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/css/common.css">
+<link rel="stylesheet" type="text/css" media="all" href="http://svr.bluecapsystem.com:8098/assets/css/style.css">
+  
+
+<title>BCS CLOUD CONTENTS 관리도구</title>
+
+
+<!-- START DEVELOPER LIB -->
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/lib/jquery.form/jquery.form.min.js"></script>
+
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/js/event.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/js/paging.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/js/sorting.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/js/alert.js"></script>
+<script type="text/javascript" src="http://svr.bluecapsystem.com:8098/adam/js/inputFmt.js"></script>
+<!-- END DEVELOPER LIB -->
+
+
+<!-- START chart js LIB -->
+<script type="text/javascript" src="/assets/lib/chart/Chart.bundle.js"></script>
+<script type="text/javascript" src="/assets/lib/chart/utils.js"></script>
+<!-- END jquery chart LIB -->
+
+
+
+
+
+
+</head>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		console.log("OnLoad!!");
+		$("#frmContent").find("[name=lastFile]").val("");
+		/** 다운로드 이벤트 */
+		var jqView = $("[data-contentdetail-view=viewContentDetail]");
+		var jqViewHeader = $("[data-contentdetail-view=contentDetailHeader]");
+		
+		// 원본 데이터셋 링크 클릭 이벤트
+		jqViewHeader.find("[data-contentdetail-view=cellOrgContentTitle]").click(function(){
+			var orgCtId = $(this).attr("data-contentdetail-orgContentId");
+			console.log("Download Event!!! FileID : ", orgCtId);
+			$(location).attr("href", "/content/detail/detailView/" + orgCtId);
+		});
+		
+		// 다운로드 버튼 클릭 이벤트
+		jqView.find("[data-contentdetail-button=btnContentFileDownload]").click(function(){
+			var fileId = $(this).attr("data-contentdetail-fileId");
+			console.log("Download Event!!! FileID : ", fileId);
+			//ajax로 보내면 안됨..!!
+			$(location).attr("href", "/file/download/" + fileId);
+		});
+		
+		// 재생 버튼 클릭 이벤트
+		jqView.find("[data-contentdetail-button=btnContentPlay]").click(function(){
+			var fileId	= $(this).attr("data-contentdetail-fileId");
+			var ctId	= $("#frmContent").find("[name=contentId]").val();
+			var ctiCount = $contentInstances.size();
+			console.log("@@@@ 재생 버튼 눌림!!! : ", ctId);
+			
+			$.ajax({
+				url: "/rest/content/update/"+ctId,
+				type: "post",
+				async : true,
+				dataType : "json",
+				success:function(data){
+					console.log("조회수 증가 LoL !!! ", data);
+					
+					$.alert(
+						"조회수가 증가되었습니다.", 
+						"컨텐츠 재생", 
+						function(jqDlg){
+							console.log("close alert box");
+							//$(location).attr("href", "/program");
+						}
+					);
+					//jqView.sendEvent("data-contentlist-event-remove", ctId);
+				},
+				error : function(resp,status,err){
+					console.error("조회수 증가 실패");
+					$.alertError(
+						"조회수 수정 실패했습니다.", 
+						"조회수 수정 오류",
+						"조회수 수정 오류",
+						function(jqDlg){
+							console.log("확인 버튼 눌림");
+						}
+					);
+				}
+			});	
+			
+		});
+		
+	});
+	
+	function onClick_modify() {
+		console.log("Modify");
+		var ctId = $("#frmContent").find("[name=contentId]").val();
+		//var viewType = $("#frmContent").find("[name=viewType]").val("modifyView");
+		var viewType = "modifyView";
+		console.log("Modify ViewType : ", viewType);
+		$(location).attr("href", "/contents/detail/"+viewType+"/" + ctId);
+		/* $.alert(
+			"문서가  수정되었습니다.", 
+			"데이터 상세", 
+			function(jqDlg){
+				var viewType = "modifyView";
+				console.log("view Type : ", viewType);
+				console.log("Content Modify! selected Id : ", ctId);
+			}
+		); */
+	}
+
+	/** 저장 버튼 이벤트 */
+	function onClick_regist() {
+		var jqView = $("body");
+		var jqForm = $("#frmContent").serialize();
+		$("#frmContent").ajaxSubmit({
+			dataType : "json",
+			beforeSubmit : function(arrData, jqForm, options) {
+				jqView.Loading();
+				// TODO : form의 데이터 검사
+				var form = $("#frmContent").serialize();
+				// 파일 확장자 검사
+				var extension = '.xls.xlsx.csv';	//.doc.pdf
+				
+				console.log("@@@ Content Detail 유효성 검사 시작 : ", form);
+				var title			= $("#frmContent").find("[name=title]").val();
+				var typeCode 		= $("#frmContent").find("[name=typeCode]").val();
+				var languageCode 	= $("#frmContent").find("[name=languageCode]").val();
+				var stageCode 		= $("#frmContent").find("[name=stageCode]").val();
+				var fileName		= $("#frmContent").find("[name=fileName]").val();
+				var lastFileName	= $("#frmContent").find("[name=lastFileName]").val();
+				
+				console.log("title : ", 		title);
+				console.log("typeCode : ", 		typeCode);
+				console.log("languageCode : ", 	languageCode);
+				console.log("stageCode : ", 	stageCode);
+				console.log("fileName : ", 		fileName);
+				console.log("orgFile : ", 		lastFileName);
+				
+				if( title.replace(blank_pattern, "") == "" ) {
+					$.alert(
+						"제목을 다시 입력해주세요", 
+						"제목 입력 오류", 
+						function(jqDlg){
+							console.log("close alert box");
+							jqView.Loading("hide");
+						}
+					);
+					return false;
+				}
+				else if( typeCode.replace(blank_pattern, "") == "" ) {
+					$.alert(
+						"콘텐츠 유형을 선택해 주세요.", 
+						"콘텐츠 유형 입력 오류",
+						function(jqDlg){
+							jqView.Loading("hide");
+						}
+					);
+					return false;
+				}
+				else if( languageCode.replace(blank_pattern, "") == "" ) {
+					$.alert(
+						"언어 구분을 선택해 주세요.",
+						"언어 구분 입력 오류",
+						function(jqDlg){
+							jqView.Loading("hide");
+						}
+					);
+					return false;
+				}
+				else if( stageCode.replace(blank_pattern, "") == "" ) {
+					$.alert(
+						"콘텐츠 단계를 선택해 주세요.", 
+						"콘텐츠 단계 입력 오류",
+						function(jqDlg){
+							jqView.Loading("hide");
+						}
+					);
+					return false;
+				}
+				// 중복 파일 체크
+				if( fileName != '' && lastFileName != '' ) {
+					var lastFileIndex = fileName.lastIndexOf("\\");
+					var fileOrgName = fileName.substring(lastFileIndex +1);
+					console.log("fileOrgName : ", fileOrgName);
+					
+					if( fileOrgName == lastFileName ) {
+						console.log("FileName already exists!");
+						$.alert(
+							"같은 이름의 파일이 이미 존재합니다.", 
+							"파일중복 오류",
+							function(jqDlg){
+								jqView.Loading("hide");
+							}
+						);
+						//alert('[파일중복 오류]같은 이름의 파일이 이미 존재합니다.');
+						//jqView.Loading("hide");
+						return false
+					}
+				}
+				
+				return true;
+			},
+			success : function(data, statusText, xhr, jqForm) {
+				console.log(data);
+				$.alert(
+					"콘텐츠가 등록되었습니다.!!", 
+					"콘텐츠 정보", 
+					function(jqDlg){
+						console.log("@@@@@@@@@@@@End!");
+						$(location).attr("href", "/contentsSearch")
+						jqView.Loading("hide");
+					}
+				);
+			},
+			error : function(err) {
+				$.alertError(
+					"콘텐츠 등록 즁 오류", 
+					"콘텐츠 등록 오류",
+					"콘텐츠 등록 오류",
+					function(jqDlg){
+						console.log("확인 버튼 눌림");
+						jqView.Loading("hide");
+					}
+				);
+				console.error(err);
+			}
+		});
+	}
+
+	/** 닫기 버튼 이벤트 */
+	function onClick_close() {
+		$(location).attr("href", "/contentsSearch")
+	}
+	
+</script>
+<!-- END HEAD -->
+<!-- START BODY -->
+<!--  modal event 의 경우 body 에 걸어 주어야 한다 -->
+<body class="dashboard">
+<!--  START SECTION.BODY -->
+	<section class="body">
+		<script type="text/javascript">
+$(document).ready(function() {
+	
+	// 한글만 입력
+	$("body").on('keypress','[data-condition-koronly]',function(event){
+		console.log("Korean input Test Start!", event);
+		
+		var $input = $(event.currentTarget);
+		
+		if((event.keyCode < 12592) || (event.keyCode > 12687) || event.keyCode != 8 ) {
+			console.log("Key is not korean", event.keyevent);
+			event.returnValue = false
+			return false;
+		}
+		else {
+			console.log("Key is korean", event.keyevent);
+			event.returnValue = true;
+			return ;
+		}
+		console.log($input.val());
+	});
+	
+	// 숩자만 입력
+	$("body").on('keyup','[data-condition-numberonly]',function(event){
+		console.log("Number input Test Start!", event);
+		
+		var $input = $(event.currentTarget);
+		
+		if(( (48<=event.keyCode) && (event.keyCode<=57) ) || (event.keyCode==8) ) { 
+			console.log("Key is number", event.keyevent);
+			return;
+		}
+		else {
+			console.log("Key is not number", event.keyevent);
+			event.target.value = event.target.value.replace(/[^0-9]/g, "");
+			event.returnValue = false;
+			return false;
+		}
+		console.log($input.val());
+	});
+	
+	// IP입력  : 숫자와 .만 허용
+	$("body").on('keydown','[data-condition-iponly]',function(event){
+		var $input = $(event.currentTarget);
+		var code = event.keyCode;
+		console.log("IP input Test Start!", event);
+		if ( (code >= 48 && code <= 57) || (code >= 96 && code <= 105) || code == 110 || 
+				code == 190 || code == 8 || code == 9 || code == 13 || code == 46 ) {
+			return ;
+		}
+		else {
+			event.returnValue = false;
+			event.target.value = event.target.value.replace(/[^0-9]/g, "");
+			console.log("ip input X", event.keyevent);
+			return false;
+		}
+		console.log($input.val());
+	});
+	
+	// 한글 입력 방지
+	$("body").on('keyup','[data-condition-nokorean]',function(event){
+		var $input = $(event.currentTarget);
+		if ( !(event.keyCode >=37 && event.keyCode<=40) ) {
+			var inputVal = $(this).val();
+			$(this).val(inputVal.replace(/[^a-z0-9\@\.\,\!\#\$\%\^\&\*\(\)\+\-\=\_\~]/g,''));
+			return false;
+		}
+		else {
+			return true;
+		}
+		console.log($input.val());
+	});
+	
+});
+
+// 정형, 비정형 파일 확장자 검사
+var isExtension = function(str, list){
+	if(!str) return;
+	// 정형 파일 확장자 리스트
+	var list = list || '.png.jpg.jepg.bmp'; // .doc.pdf
+	var index = str.lastIndexOf(".");
+	console.log("list", list);
+	console.log("org", str);
+	var extensionVal = str.substr(index + 1).toLowerCase();
+	console.log("ext",extensionVal);
+	var listVal = list;
+	var is = listVal.indexOf(extensionVal) != -1;
+	if(is) {
+		console.log("ext OK",extensionVal);
+		return true;
+	}else {
+		console.log("ext Fail",extensionVal);
+		return false;
+	}
+};
+</script>
+<!-- START HEADER -->
+<header class="header">
+
+	<div class="header-inner">
+		<div class="header-left">
+			<a href="javascript:;" class="toggle-gnb" title="메뉴 열기/닫기"> <i
+				class="icon icon-menu"></i>
+			</a>
+		</div>
+		<div class="header-center">
+			<h1>
+				<em>BCS CLOUD CONTENTS 관리도구</em>
+			</h1>
+		</div>
+		<div class="header-right">
+			<div class="user-box">
+				<em class="project-name"> <a href="javascript:$.fn.Modal.open({ id:'project-change',  class:'lookup-doc',  contentUrl:'/project/change/' });"> BCS 클라우드 콘텐츠 관리도구 </a></em>
+				<em class="user-name">super</em> <em class="greeting">님
+					반갑습니다.</em>
+				<figure class="profile-pic">
+					<button type="button" class="wrap-img" data-cpnt-dropdown-list-menu>
+						<span class="img"></span>
+						<ul class="dropdown-list-menu profile">
+							<li><span onClick="location.href='/playlist'">
+								<i class="icon icon-dlm-history"> </i>
+								<em>즐겨찾기</em>
+								</span>
+							</li>
+							<li>
+								<span onClick="$.fn.Modal.open({id:'personal-modify', class:'lookup-doc',contentUrl:'/user/personalData/super'});">
+									<i class="icon icon-dlm-user"> </i>
+									<em>개인정보</em>
+								</span>
+							</li>
+							<li>
+								<span onClick="$.fn.Modal.open({id:'personal-modify', class:'lookup-doc',contentUrl:'/user/passwordChange/super'});">
+									<i class="icon icon-dlm-user"> </i>
+									<em>비밀번호</em>
+								</span>
+							</li>
+							<li>
+								<span onClick="location.href='/logout'"> 
+									<i class="icon icon-dlm-out"></i>
+									<em>로그아웃</em>
+								</span>
+							</li>
+						</ul>
+					</button>
+				</figure>
+				<div class="user-tool">
+					<button type="button"
+						onclick="javascript:$.fn.Modal.open({id:'add-project',mode:'layer-popup',contentUrl:'add_project.html'});">
+						<i class="icon icon-gear"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<!-- END HEADER -->		<!-- START CONTAINER -->
+		<div class="container">
+			
+			
+<script>
+function newTab(url){
+	var win = window.open(url, '_blank');
+	win.focus();
+}
+</script>
+<!-- START NAV -->
+<div class="nav-container fade">
+	<div class="nano" data-cpnt-nano-scroller>
+		<div class="nano-content">
+			<nav class="nav-gnb">
+				<ul class="nav-gnb-main">
+																											<li class="nav-parent" data-navigation-menuId="HOME">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-home"></i></span> 
+							<span><em>홈</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																												<li data-navigation-menuId="공지사항"><a href="/notice/NoticeList"> <em>공지사항</em></a></li>
+																		
+																																																																																																																																																																		<li data-navigation-menuId="자료실"><a href="/notice/ReferenceRoom"> <em>자료실</em></a></li>
+																		
+																																																																																																</ul>
+					</li>
+																																<li class="nav-parent" data-navigation-menuId="PROJECT">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-gear2"></i></span> 
+							<span><em>채널관리</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																																																																																																							<li data-navigation-menuId="프로젝트관리"><a href="/project"> <em>채널관리</em></a></li>
+																		
+																																																																																																																																																												</ul>
+					</li>
+																																<li class="nav-parent" data-navigation-menuId="CONTENTS_MANAGE">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-stack"></i></span> 
+							<span><em>콘텐츠 관리</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																																																																																								<li data-navigation-menuId="프로그램"><a href="/program"> <em>프로그램</em></a></li>
+																		
+																																																																																							<li data-navigation-menuId="에피소드"><a href="/episode"> <em>에피소드</em></a></li>
+																		
+																																																																								<li data-navigation-menuId="콘텐츠"><a href="/contents/registSingleContent"> <em>콘텐츠
+</em></a></li>
+																		
+																																																																		</ul>
+					</li>
+																																<li class="nav-parent" data-navigation-menuId="SEARCH">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-search3"></i></span> 
+							<span><em>검색</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																																																																									<li data-navigation-menuId="전체"><a href="/contentsSearch"> <em>전체</em></a></li>
+																		
+																																																																								<li data-navigation-menuId="내가등록한컨텐츠"><a href="/myContents"> <em>내가 등록한 컨텐츠</em></a></li>
+																		
+																																																																																																																					<li data-navigation-menuId="콘텐츠목록"><a href="/contentsSearch/contentList"> <em>콘텐츠목록</em></a></li>
+																		
+																																																			</ul>
+					</li>
+																																<li class="nav-parent" data-navigation-menuId="NLE">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-note"></i></span> 
+							<span><em>영상편집</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																																																										<li data-navigation-menuId="영상편집"><a href="javascript:newTab('/nle');"> <em>영상편집</em></a></li>
+																		
+																																																																																																																																																																																																									</ul>
+					</li>
+																																<li class="nav-parent" data-navigation-menuId="OPTION">
+						<a href="#" class="icon-link "> 
+							<span><i class="icon icon-submenu"></i></span> 
+							<span><em>관리자메뉴</em></span>
+						</a>
+						<ul class="nav nav-children">
+																																																																																																																																											<li data-navigation-menuId="그룹권한관리"><a href="/authority"> <em>그룹/권한관리</em></a></li>
+																		
+																																																																																																																					<li data-navigation-menuId="사용자관리"><a href="/user"> <em>사용자관리</em></a></li>
+																		
+																																																																								<li data-navigation-menuId="메뉴관리"><a href="/menu"> <em>메뉴관리</em></a></li>
+																		
+																																																																								<li data-navigation-menuId="코드관리"><a href="/code"> <em>코드관리</em></a></li>
+																		
+																																										<li data-navigation-menuId="게시판관리"><a href="/bulletinboard"> <em>게시판관리</em></a></li>
+																		
+																					</ul>
+					</li>
+																																																																																																																																																				</ul>
+			</nav>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("[data-navigation-menuId=콘텐츠]").closest("li.nav-parent").addClass("on")
+		.find("a.icon-link").addClass("home");
+		
+		$("[data-navigation-menuId=콘텐츠]").addClass("on");
+	});
+		
+	</script>
+</div>
+
+
+			<!-- START PAGE-HEADER -->
+			<div class="page-header">
+				<div class="page-header-left">
+					<ol class="breadcrumbs">
+						<li><a href="#"> <i class="icon icon-stack"></i> <em>콘텐츠 관리</em></a></li>
+						<li class="on"><a href="#"> <em> 콘텐츠 </em>
+						</a></li>
+					</ol>
+				</div>
+			</div>
+			<!-- END PAGE-HEADER -->
+			<!-- START CONTENTS -->
+			<div class="contents">
+				<section role="main" class="content-body" style="width:1200px;"><!-- 2018-03-11 bny 수정 -->
+					<div class="row">
+						<!-- START LEFT COLUMN -->
+						<div class="col">
+							<section class="section-panel">
+								<div class="row colgroup3">
+									<div class="col">
+										<h2 class="section-title">
+											콘텐츠 추가
+										</h2>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="section-heading">
+											<table class="type3" data-contentdetail-view="contentDetailHeader">
+												<colgroup>
+													<col style="width:87px"/>
+													<col style="width:250px"/>
+													<col style="width:80px"/>
+													<col style="width:auto"/>
+												</colgroup>
+												<tbody>
+													<tr>
+														<th scope="row">
+															<em>프로그램명</em>
+														</th>
+														<td>
+															
+														</td>
+														<th scope="row">
+															<em>에피소드명</em>
+														</th>
+														<td>
+															
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										
+
+										<!-- 2018-03-11 bny 수정 -->
+										<!-- bny 수정 -->
+										<style>
+											.embed-container {position:relative; padding-bottom:56.25%; height:0; overflow:hidden; max-width:100%; } 
+											.embed-container iframe, .embed-container object, .embed-container embed {position:absolute; top:0; left:0; width:100%; height:100%; }
+										</style>
+										<form onSubmit="return false;" id="frmContent" method="post" enctype="multipart/form-data"
+											action="/rest/content/regist">
+											<input type="hidden" name="projectId" value="99999" />
+											<input type="hidden" name="programId" value="" />
+											<input type="hidden" name="episodeId" value="" />
+											<input type="hidden" name="contentId" value="" />
+											<input type="hidden" name="lastFileName" value="" />
+											<table class="type2" >
+												<colgroup>
+													<col style="width: 100px" />
+													<col style="width: 160px" />
+													<col style="width: 90px" />
+													<col style="width: 130px;" />
+													<col style="width: 90px" />
+													<col style="width: 160px;" />
+													<col style="width: *;" />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th scope="row">콘텐츠 제목<em class="subscript"> &nbsp; *</em></th>
+														<td colspan="3"><input type="text" class="size1"
+																name="title" value="" />
+															<em class="subscript" style="top=0px;"> &nbsp; 최대글자수 50자</em>
+														</td>
+														<th scope="row" rowspan="2">영상/사진<br/>대표화면</th>
+														<td rowspan="2"><img src="11.png" style="height:60px;" /></td>
+														<td rowspan="8" style="background:#f7f7f7;">
+															<div class="top_video_box">
+																<div class="embed-container"><iframe src="https://www.youtube.com/embed/YpPhpoc5JC8?ecver=2" frameborder="0" allowfullscreen></iframe></div>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row">콘텐츠유형<em class="subscript"> &nbsp; *</em></th>
+														<td colspan="3">
+															<select class="size1" data-placeholder="선택하세요" data-cpnt-select name="typeCode">
+																<option value="비디오">비디오</option>
+																<option value="이미지">이미지</option>
+																<option value="음원">음원</option>
+																<option value="그룹">그룹</option>
+																<option value="파일">파일</option>
+															</select>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row">설명</th>
+														<td colspan="5"><textarea name="description" style="height:50px;"></textarea></td>
+													</tr>
+													<tr>
+														<th scope="row">컨텐츠 단계<em class="subscript"> &nbsp; *</em></th>
+														<td colspan="3">
+															<select class="size1" data-placeholder="선택하세요" data-cpnt-select data-cpnt-select name="stageCode" >
+																<option value="수집">수집</option>
+																<option value="편집">편집</option>
+																<option value="편집완성">편집완성</option>
+																<option value="서비스">서비스</option>
+															</select>
+														</td>
+														<th scope="row">언어 구분<em class="subscript"> &nbsp; *</em></th>
+														<td>
+															<select class="size1" data-placeholder="선택하세요" data-cpnt-select name="languageCode">
+																<option value="한국어">한국어</option> 
+																<option value="영어">영어</option> 
+																<option value="중국어">중국어</option> 
+																<option value="일본어">일본어</option> 
+															</select>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row">작성자</th>
+														<td>
+															슈퍼맨
+															<input type="hidden" name="registUserId" value="super" />
+														</td>
+														<th scope="row">작성일</th>
+														<td></td>
+														<th scope="row">수정일</th>
+														<td></td>
+													</tr>
+													<!-- <tr>
+														<th scope="row">파일선택</th>
+														<td colspan="5">
+															<div class="input-file-container size1" data-cpnt-input-file>
+																<input type="text" name="fileName" class="input-file-url" value="">
+																<button type="button" class="input-file-btn">
+																	<em>찾아보기</em>
+																</button>
+																<input type="file" class="input-file" name="file">
+															</div> 
+														</td>
+													</tr> -->
+												</tbody>
+											</table>
+										</form>
+										<!-- //bny 수정 -->
+										<!-- //2018-03-11 bny 수정 -->
+
+
+									</div>
+								</div>
+								<div class="row colgroup11">
+									<div class="col">
+									<tr>
+										<td colspan="2" class="action-container">
+											<button type="button" class="btn type4" onClick="onClick_regist();">
+												<em>저장</em>
+											</button>
+										</td>
+										<!-- <td colspan="2" class="action-container">
+										<button type="button" class="btn type4"
+											onClick="onClick_close();">
+											<em>닫기</em>
+										</button>
+										</td> -->
+									</tr>
+									</div>
+								</div>
+							</section>
+						</div>
+						<!-- END LEFT COLUMN -->
+					</div>
+				</section>
+			</div>
+			<!-- END CONTENTS -->
+			<!-- START FOOTER -->
+<footer  class="footer">
+  <div class="row">
+    <div class="col">
+      <em>Copyright 2017 BCS All Rights Reserved.</em>
+    </div>
+  </div>
+</footer>
+
+<!-- START GLOBAL LEVEL SCRIPT -->
+<script type="text/javascript" src="/assets/js/ui.js"></script>
+<!-- END GLOBAL LEVEL SCRIPT -->      
+<!-- END FOOTER -->		</div>
+		<!-- END CONTAINER -->
+	</section>
+	<!--  END SECTION.BODY -->
+</body>
+</html>
